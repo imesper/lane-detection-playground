@@ -122,10 +122,10 @@ cv::Mat LaneDetection::polygonMask(cv::Mat original)
 
 
     // Defining Points to select the region of interest
-    
+
     std::vector<std::vector<cv::Point>> pts;
     std::vector<cv::Point> tmp;
-    
+
     tmp.push_back(cv::Point(0, 0));
     tmp.push_back(cv::Point(0, height));
     tmp.push_back(cv::Point((width*5/100), height));
