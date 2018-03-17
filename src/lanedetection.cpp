@@ -1,5 +1,6 @@
 #include "lanedetection.h"
 #include <QDebug>
+
 cv::Size LaneDetection::gausKernel() const
 {
     return _gausKernel;
@@ -23,15 +24,11 @@ LaneDetection::LaneDetection(std::string filePath) :
     _maxLineGap(1)
 {
     this->_capWebCam.open(filePath);
-
-    //    this->_timer = new QTimer(this);
-    //    this->connect(this->_timer, SIGNAL(timeout()), this, SLOT(processFrameAndUpdateGUI()));
-    //    this->_timer->start(60);
 }
 
 LaneDetection::~LaneDetection()
 {
-
+    this->_capWebCam.release();
 }
 
 int LaneDetection::vmax() const
@@ -304,7 +301,7 @@ void LaneDetection::processFrameAndUpdateGUI(std::vector<cv::Mat> &images)
     }
 
     // Convert to RGB
-     cv::cvtColor(this->_matOriginal, this->_matOriginal,CV_BGR2RGB);
+    cv::cvtColor(this->_matOriginal, this->_matOriginal,CV_BGR2RGB);
 
 
     // Convert to HSV
@@ -329,47 +326,61 @@ void LaneDetection::processFrameAndUpdateGUI(std::vector<cv::Mat> &images)
     //    cv::add(mixedMask, hls_y, mixedMask);
 
 
-//    this->_matEdges = mixedMask;
+    //    this->_matEdges = mixedMask;
     this->_matEdges = this->exctractCannyEdges(mixedMask);
 
     cv::Mat matEdges = this->exctractCannyEdges(this->_matGreyGaussian);
 
     this->_matEdges = this->polygonMask(this->_matEdges);
+
     matEdges = this->polygonMask(matEdges);
+
+    cv::Mat maskRegion = this->polygonMask(mixedMask);
 
     cv::Mat lineImage = this->extractLines(this->_matEdges);
 
     cv::Mat lineImage2 = this->extractLines(matEdges);
 
+    cv::Mat lineImage3 = this->extractLines(maskRegion);
+
     cv::Mat image1;
     cv::Mat image2;
+    cv::Mat image3;
+
     cv::addWeighted(lineImage2, 1, this->_matOriginal, 0.4, 1, image1);
     cv::addWeighted(lineImage, 1, this->_matOriginal, 0.4, 1, image2);
+    cv::addWeighted(lineImage3, 1, this->_matOriginal, 0.4, 1, image3);
 
     int width = this->_matOriginal.cols/2;
     int height = this->_matOriginal.rows/2;
     cv::Mat small;
     cv::Mat image1Small;
     cv::Mat image2Small;
+    cv::Mat image3Small;
     cv::Mat edges1Small;
     cv::Mat edges2Small;
+    cv::Mat edges3Small;
+    cv::Mat mixedSmall;
 
     cv::resize(this->_matOriginal, small, cv::Size(width, height));
     cv::resize(image1, image1Small, cv::Size(width, height));
     cv::resize(image2, image2Small, cv::Size(width, height));
+    cv::resize(image3, image3Small, cv::Size(width, height));
     cv::resize(matEdges, edges1Small, cv::Size(width, height));
     cv::resize(this->_matEdges, edges2Small, cv::Size(width, height));
+    cv::resize(maskRegion, mixedSmall, cv::Size(width, height));
 
-//    cv::imshow("Large", matEdges);
-//    cv::imshow("Small", edges1Small);
-//    cv::waitKey();
+    //    cv::imshow("Large", matEdges);
+    //    cv::imshow("Small", edges1Small);
+    //    cv::waitKey();
 
     images.push_back(small);
     images.push_back(image1Small);
     images.push_back(image2Small);
     images.push_back(edges1Small);
     images.push_back(edges2Small);
-
+    images.push_back(image3Small);
+    images.push_back(mixedSmall);
 }
 
 

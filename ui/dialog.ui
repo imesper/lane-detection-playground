@@ -52,6 +52,9 @@
         <layout class="QGridLayout" name="gridLayout_5">
          <item row="2" column="7">
           <widget class="QSlider" name="cannyLowTHSlider">
+           <property name="maximum">
+            <number>250</number>
+           </property>
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>

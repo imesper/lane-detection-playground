@@ -7,7 +7,7 @@
 Dialog::Dialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Dialog),
-    laneDetection("solidYellowLeft.mp4")
+    laneDetection("test.mp4")
 {
     ui->setupUi(this);
     move(0, 0);
@@ -39,16 +39,22 @@ void Dialog::processFrameAndUpdateGUI(){
     std::vector<cv::Mat> images;
 
     laneDetection.processFrameAndUpdateGUI(images);
+
     cv::Mat small = images[0];
     QImage original =  QImage(images[0].data, images[0].cols, images[0].rows, static_cast<int>(images[0].step), QImage::Format_RGB888);
-    image1 = QImage(images[1].data, images[1].cols, images[1].rows, static_cast<int>(images[1].step), QImage::Format_RGB888);
-    image2 = QImage(images[2].data, images[2].cols, images[2].rows, static_cast<int>(images[2].step), QImage::Format_RGB888);
-    edges1 = QImage(images[3].data, images[3].cols, images[3].rows, static_cast<int>(images[3].step), QImage::Format_Indexed8);
-    edges2 = QImage(images[4].data, images[4].cols, images[4].rows, static_cast<int>(images[4].step), QImage::Format_Indexed8);
+    QImage image1 = QImage(images[1].data, images[1].cols, images[1].rows, static_cast<int>(images[1].step), QImage::Format_RGB888);
+    QImage image2 = QImage(images[2].data, images[2].cols, images[2].rows, static_cast<int>(images[2].step), QImage::Format_RGB888);
+    QImage edges1 = QImage(images[3].data, images[3].cols, images[3].rows, static_cast<int>(images[3].step), QImage::Format_Indexed8);
+    QImage edges2 = QImage(images[4].data, images[4].cols, images[4].rows, static_cast<int>(images[4].step), QImage::Format_Indexed8);
+    QImage image3 = QImage(images[5].data, images[5].cols, images[5].rows, static_cast<int>(images[5].step), QImage::Format_RGB888);
+    QImage mixed = QImage(images[6].data, images[6].cols, images[6].rows, static_cast<int>(images[6].step), QImage::Format_Indexed8);
+
     ui->label->setPixmap(QPixmap::fromImage(image1));
-    ui->label_2->setPixmap(QPixmap::fromImage(image2));
+//    ui->label_2->setPixmap(QPixmap::fromImage(image2));
     ui->label_3->setPixmap(QPixmap::fromImage(edges1));
-    ui->label_4->setPixmap(QPixmap::fromImage(edges2));
+//    ui->label_4->setPixmap(QPixmap::fromImage(edges2));
+    ui->label_2->setPixmap(QPixmap::fromImage(image3));
+    ui->label_4->setPixmap(QPixmap::fromImage(mixed));
 
 }
 

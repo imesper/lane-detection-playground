@@ -2,17 +2,14 @@
 #define LANEDETECTION_H
 
 #include <string>
-#include <QTimer>
-#include <QImage>
-
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 
-class LaneDetection : public QObject
+class LaneDetection
 {
-    QString _filePath;
-    QTimer _frameTimer;
+    std::string _filePath;
+
     cv::VideoCapture _capWebCam;
     cv::Mat _matOriginal;
     cv::Mat _matHSV;
@@ -28,15 +25,9 @@ class LaneDetection : public QObject
     cv::Point _b;
     cv::VideoWriter _outputCap;
 
-    QImage imageOriginal;
-    QImage imageProcessed;
-    QImage imageHSV;
-    QImage imageEdges;
-
     std::vector<cv::Vec3f> vecCircles;
     std::vector<cv::Vec3f>::iterator itrCircles;
 
-    QTimer * _timer;
     cv::Size _gausKernel;
 
     int _vmin;

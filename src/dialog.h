@@ -51,10 +51,6 @@ private:
 
     LaneDetection laneDetection;
 
-    QImage image1;
-    QImage image2;
-    QImage edges1;
-    QImage edges2;
     QTimer *timer;
 };
 
